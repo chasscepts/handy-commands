@@ -3,6 +3,7 @@
   "displayName": "Handy Commands",
   "description": "Add commonly used commands to the sidebar for easy access.",
   "version": "0.0.1",
+  "publisher": "chasscepts",
   "engines": {
     "vscode": "^1.55.0"
   },
@@ -52,10 +53,22 @@
         }
       }
     ],
+    "viewsWelcome": [
+      {
+        "view": "handy-commands.commandTree",
+        "contents": "[Add A Group To Start](Command:handy-commands.add-new-group)",
+        "when": "!hasGroups"
+      },
+      {
+        "view": "handy-commands.commandTree",
+        "contents": "[Add A Command To This Group](Command:handy-commands.add-new-command)",
+        "when": "hasGroups"
+      }
+    ],
     "views": {
       "explorer": [
         {
-          "id": "comm-comm.handyCommands",
+          "id": "handy-commands.commandTree",
           "name": "Handy Commands"
         }
       ]
@@ -64,34 +77,34 @@
       "view/title": [
         {
           "command": "handy-commands.change-group",
-          "when": "view == comm-comm.handyCommands",
+          "when": "view == handy-commands.commandTree && hasGroups",
           "group": "@0"
         },
         {
           "command": "handy-commands.add-new-group",
-          "when": "view == comm-comm.handyCommands",
+          "when": "view == handy-commands.commandTree",
           "group": "@1"
         },
         {
           "command": "handy-commands.add-new-command",
-          "when": "view == comm-comm.handyCommands",
+          "when": "view == handy-commands.commandTree && hasGroups",
           "group": "@2"
         },
         {
           "command": "handy-commands.delete-group",
-          "when": "view == comm-comm.handyCommands",
+          "when": "view == handy-commands.commandTree && hasGroups",
           "group": "@3"
         }
       ],
       "view/item/context": [
         {
           "command": "handy-commands.delete-command",
-          "when": "view == comm-comm.handyCommands",
+          "when": "view == handy-commands.commandTree",
           "group": "inline@1"
         },
         {
           "command": "handy-commands.paste-to-terminal",
-          "when": "view == comm-comm.handyCommands",
+          "when": "view == handy-commands.commandTree",
           "group": "inline@0"
         }
       ]
