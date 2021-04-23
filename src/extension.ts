@@ -49,7 +49,11 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand('handy-commands.add-new-group', () => {
       vscode.window.showInputBox({ prompt: 'Please Enter Group Name' }).then((group) => {
-        if (!group || !storage.createGroup(group)) {
+        if (!group) {
+          return;
+        }
+        if (!storage.createGroup(group)) {
+          vscode.window.showErrorMessage("Unable to create group. Please try again.");
           return;
         }
         provider.group = group;
@@ -72,7 +76,11 @@ export function activate(context: vscode.ExtensionContext) {
           return;
         }
         vscode.window.showInputBox({ prompt: 'Please Enter Command Label' }).then((label) => {
-          if (!label || !storage.createCommand(provider.group, label, command)) {
+          if (!label) {
+            return;
+          }
+          if (!storage.createCommand(provider.group, label, command)) {
+            vscode.window.showErrorMessage("Unable to create command. Please try again.");
             return;
           }
           provider.refresh();
@@ -90,7 +98,11 @@ export function activate(context: vscode.ExtensionContext) {
       }
       const prompt = `This group ${provider.group} and all it's commands will be deleted!`;
       vscode.window.showInformationMessage(prompt, 'Delete', 'Cancel').then((choice) => {
-        if (choice !== 'Delete' || !storage.deleteGroup(provider.group)) {
+        if (!choice) {
+          return;
+        }
+        if (!storage.deleteGroup(provider.group)) {
+          vscode.window.showErrorMessage("Unable to delete group. Please try again.");
           return;
         }
         provider.reset();
@@ -110,7 +122,11 @@ export function activate(context: vscode.ExtensionContext) {
 
       const prompt = 'This item will be deleted';
       vscode.window.showInformationMessage(prompt, 'Delete', 'Cancel').then((choice) => {
-        if (choice !== 'Delete' || !storage.deleteCommand(item)) {
+        if (!choice) {
+          return;
+        }
+        if (!storage.deleteCommand(item)) {
+          vscode.window.showErrorMessage("Unable to delete command. Please try again.");
           return;
         }
         provider.refresh();

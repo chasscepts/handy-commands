@@ -1,7 +1,7 @@
-import { Memento, window } from "vscode";
+import { Memento } from "vscode";
 import CommandItem from "./command";
 
-const STORAGE_KEY = 'storage.Commands_Key';
+const STORAGE_KEY = 'handy-commands.storage.STORAGE_KEY';
 
 export default class LocalStorage {
   commands: { [group: string]: { [command: string]: string} };
@@ -9,12 +9,14 @@ export default class LocalStorage {
   constructor(private storage: Memento) {
     let text = this.storage.get<string>(STORAGE_KEY);
     if (!text) {
-      text = '{}';
-    }
-    try{
-      this.commands = JSON.parse(text);
-    }catch {
       this.commands = {};
+    }
+    else {
+      try{
+        this.commands = JSON.parse(text);
+      }catch {
+        this.commands = {};
+      }
     }
   }
 
@@ -42,24 +44,24 @@ export default class LocalStorage {
    */
   createGroup = (group: string) => {
     this.commands[group] = Object.create(null);
-    return true; // this.save();
+    return this.save();
   };
 
   deleteCommand = (item: CommandItem) => {
     delete this.commands[item.parent][item.name];
-    return true; // this.save();
+    return this.save();
   };
 
   deleteGroup = (group: string) => {
     delete this.commands[group];
-    return true; // this.save();
+    return this.save();
   };
 
   isEmpty = () => Object.keys(this.commands).length <= 0;
 
   private save = ()=> {
     try {
-      this.storage.update(STORAGE_KEY, this.commands);
+      this.storage.update(STORAGE_KEY, JSON.stringify(this.commands));
     } catch (e) {
       return false;
     }
