@@ -11,7 +11,7 @@
     "Other"
   ],
   "activationEvents": [
-      "onStartupFinished"
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -48,8 +48,8 @@
         "command": "handy-commands.paste-to-terminal",
         "title": "Paste to terminal",
         "icon": {
-          "light": "assets/light/edit.svg",
-          "dark": "assets/dark/edit.svg"
+          "light": "assets/light/content-paste.svg",
+          "dark": "assets/dark/content-paste.svg"
         }
       }
     ],
