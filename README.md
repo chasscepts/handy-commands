@@ -1,70 +1,57 @@
-# handy-commands README
+# Handy Commands
 
-This is the README for your extension "handy-commands". After writing up a brief description, we recommend including the following sections.
+A VSCode extension for organizing frequently run commands.
+Sometimes we forget that command we want to run and we will leave our development environment to search for it. That is not productive. With Handy Commands, you organize them in groups of related commands and run them with a click of the mouse. If some part of the command changes from run to run, paste and edit it in the terminal. If you no longer frequestly use a command, delete it. And by organizing them into groups, they will not clutter your workspace.
+
+![screenshot](./assets/screenshot.gif)
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- Add a group to your collection. (Initially, there are no groups or commands)
+- Add command items to the group. A command item consists of a command and the label.
+- Add more groups and commands.
+- Select a group to load its commands in the view.
+- Run a command by clicking it's node.
+- Paste a command by clicking the paste icon.
+- Delete commands and groups as needed.
+- Be more productive.
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+#### None
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+#### None
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+#### Currently None
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### Version 1.0.0
 
-### 1.0.0
+## Author Details
 
-Initial release of ...
+👤 **Obetta Francis**
 
-### 1.0.1
+[![](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/chasscepts) [![](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/chasscepts) [![](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/chasscepts/)
 
-Fixed issue #.
+## 🤝 Contributing
 
-### 1.1.0
+Contributions, issues and feature requests are welcome!
 
-Added features X, Y, and Z.
+Feel free to check the [issues page](https://github.com/chasscepts/handy-commands/issues).
 
------------------------------------------------------------------------------------------------------------
-## Following extension guidelines
+## Show your support
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+⭐ Star this project on [GitHub](https://github.com/chasscepts/handy-commands/) — it helps!
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+## Acknowledgments
 
-## Working with Markdown
+- Microverse Community.
 
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
+## 📝 License
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+This project is [MIT](./LICENSE) licensed.
