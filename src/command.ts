@@ -5,12 +5,12 @@ export default class CommandItem extends vscode.TreeItem {
 
   name: string;
 
-  parent: string;
+  group: string;
 
-  constructor(label: string, commandText: string, parent: string) {
+  constructor(label: string, commandText: string, group: string) {
     super(label, vscode.TreeItemCollapsibleState.None);
     this.commandText = commandText;
-    this.parent = parent;
+    this.group = group;
     this.name = label;
     this.command = {
       title: label,

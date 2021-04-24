@@ -48,7 +48,7 @@ export default class LocalStorage {
   };
 
   deleteCommand = (item: CommandItem) => {
-    delete this.commands[item.parent][item.name];
+    delete this.commands[item.group][item.name];
     return this.save();
   };
 
