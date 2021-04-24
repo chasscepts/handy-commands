@@ -18,7 +18,7 @@ Sometimes we forget that command we want to run and we will leave our developmen
 
 ## Requirements
 
-#### None
+#### VSCode >= 1.55.0
 
 ## Extension Settings
 
