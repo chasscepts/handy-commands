@@ -1,9 +1,21 @@
 {
   "name": "handy-commands",
   "displayName": "Handy Commands",
-  "description": "Add commonly used commands to the sidebar for easy access.",
+  "description": "Organise frequently used commands on the sidebar for easy access.",
   "version": "0.0.1",
   "publisher": "chasscepts",
+  "author": {
+    "name": "Obetta Francis",
+    "email": "francischassobetta@gmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/chasscepts/handy-commands"
+  },
+  "bugs": {
+    "url": "https://github.com/chasscepts/handy-commands/issues"
+  },
+  "homepage": "https://github.com/chasscepts/handy-commands#readme",
   "engines": {
     "vscode": "^1.55.0"
   },

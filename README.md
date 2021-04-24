@@ -3,7 +3,7 @@
 A VSCode extension for organizing frequently run commands.
 Sometimes we forget that command we want to run and we will leave our development environment to search for it. That is not productive. With Handy Commands, you organize them in groups of related commands and run them with a click of the mouse. If some part of the command changes from run to run, paste and edit it in the terminal. If you no longer frequestly use a command, delete it. And by organizing them into groups, they will not clutter your workspace.
 
-![screenshot](assets/screenshot.gif)
+![screenshot](./assets/screenshot.gif)
 
 ## Features
 
