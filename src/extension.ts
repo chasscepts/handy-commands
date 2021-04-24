@@ -40,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
         provider.group = group;
         provider.refresh();
-        tree.title = `Handy Commands - ${group}`;
+        tree.title = `HC - ${group}`;
       });
     })
   );
@@ -58,7 +58,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
         provider.group = group;
         provider.refresh();
-        tree.title = `Handy Commands - ${group}`;
+        tree.title = `HC - ${group}`;
       });
     })
   );
