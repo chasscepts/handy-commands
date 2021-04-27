@@ -1,21 +1,30 @@
 import * as vscode from 'vscode';
 import CommandItem from './command';
+import CommandsBank from './commands-bank';
 import CommandsProvider from './commands-provider';
-import LocalStorage from './storage';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-  const storage = new LocalStorage(context.globalState);
-  const provider = new CommandsProvider(storage);
-  const groupEmptyMessage = 'Groups Empty! Please add groups before running this command';
+  const bank = new CommandsBank(context.globalState);
+  const provider = new CommandsProvider();
 
   // eslint-disable-next-line max-len
   const tree = vscode.window.createTreeView('handy-commands.commandTree', { treeDataProvider: provider });
 
-  if (provider.group) {
-    tree.title = `Handy Commands - ${provider.group}`;
-  }
+
+  bank.onGroupChange = (group, commands) => {
+    if (group !== null) {
+      vscode.commands.executeCommand('setContext', 'hasGroup', true);
+      provider.setGroup(group, commands);
+      tree.title = `HC - ${group}`;
+    } else {
+      vscode.commands.executeCommand('setContext', 'hasGroup', false);
+      tree.title = 'Handy Commands';
+    }
+  };
+
+  const groupEmptyMessage = 'Groups Empty! Please add groups before running this command';
 
   context.subscriptions.push(tree);
 
@@ -29,18 +38,16 @@ export function activate(context: vscode.ExtensionContext) {
   // change-group
   context.subscriptions.push(
     vscode.commands.registerCommand('handy-commands.change-group', () => {
-      if (storage.isEmpty()) {
+      if (bank.isEmpty()) {
         vscode.window.showInformationMessage(groupEmptyMessage);
         return;
       }
 
-      vscode.window.showQuickPick(Object.keys(storage.commands)).then((group) => {
-        if (!group || group === provider.group) {
+      vscode.window.showQuickPick(Object.keys(bank.getGroups())).then((group) => {
+        if (!group || group === bank.getSelectedGroup()) {
           return;
         }
-        provider.group = group;
-        provider.refresh();
-        tree.title = `HC - ${group}`;
+        bank.selectGroup(group);
       });
     })
   );
@@ -52,13 +59,9 @@ export function activate(context: vscode.ExtensionContext) {
         if (!group) {
           return;
         }
-        if (!storage.createGroup(group)) {
+        if (!bank.createGroup(group)) {
           vscode.window.showErrorMessage("Unable to create group. Please try again.");
-          return;
         }
-        provider.group = group;
-        provider.refresh();
-        tree.title = `HC - ${group}`;
       });
     })
   );
@@ -66,7 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
   // add-new-command
   context.subscriptions.push(
     vscode.commands.registerCommand('handy-commands.add-new-command', () => {
-      if (!provider.group) {
+      if (!bank.getSelectedGroup()) {
         vscode.window.showErrorMessage('Please select a group to add command to!');
         return;
       }
@@ -79,11 +82,9 @@ export function activate(context: vscode.ExtensionContext) {
           if (!label) {
             return;
           }
-          if (!storage.createCommand(provider.group, label, command)) {
+          if (!bank.createCommand(label, command)) {
             vscode.window.showErrorMessage("Unable to create command. Please try again.");
-            return;
           }
-          provider.refresh();
         });
       });
     })
@@ -92,22 +93,18 @@ export function activate(context: vscode.ExtensionContext) {
   //delete-group
   context.subscriptions.push(
     vscode.commands.registerCommand('handy-commands.delete-group', () => {
-      if (!provider.group) {
+      if (!bank.getSelectedGroup()) {
         vscode.window.showErrorMessage('You have not selected any group yet!');
         return;
       }
-      const prompt = `This group ${provider.group} and all it's commands will be deleted!`;
+      const prompt = `This group ${bank.getSelectedGroup()} and all it's commands will be deleted!`;
       vscode.window.showInformationMessage(prompt, 'Delete', 'Cancel').then((choice) => {
         if (!choice) {
           return;
         }
-        if (!storage.deleteGroup(provider.group)) {
+        if (!bank.deleteGroup()) {
           vscode.window.showErrorMessage("Unable to delete group. Please try again.");
-          return;
         }
-        provider.reset();
-        provider.refresh();
-        tree.title = provider.group ? `Handy Commands - ${provider.group}` : 'Handy Commands';
       });
     })
   );
@@ -115,21 +112,19 @@ export function activate(context: vscode.ExtensionContext) {
   // delete-command
   context.subscriptions.push(
     vscode.commands.registerCommand('handy-commands.delete-command', (item: CommandItem) => {
-      if (!CommandItem) {
+      if (!(item && item.label)) {
         vscode.window.showErrorMessage('Action Failed! It seems you did not select any command');
         return;
       }
 
       const prompt = 'This item will be deleted';
       vscode.window.showInformationMessage(prompt, 'Delete', 'Cancel').then((choice) => {
-        if (!choice) {
+        if (!(choice && item && item.label)) {
           return;
         }
-        if (!storage.deleteCommand(item)) {
+        if (!bank.deleteCommand(item.label.toString())) {
           vscode.window.showErrorMessage("Unable to delete command. Please try again.");
-          return;
         }
-        provider.refresh();
       });
     })
   );

@@ -1,5 +1,4 @@
 import { Memento } from "vscode";
-import CommandItem from "./command";
 
 const STORAGE_KEY = 'handy-commands.storage.STORAGE_KEY';
 
@@ -43,12 +42,16 @@ export default class LocalStorage {
    * @returns false if save fails, true otherwise
    */
   createGroup = (group: string) => {
+    if (Object.keys(this.commands).indexOf(group) > 0) {
+      return false;
+    }
+
     this.commands[group] = Object.create(null);
     return this.save();
   };
 
-  deleteCommand = (item: CommandItem) => {
-    delete this.commands[item.group][item.name];
+  deleteCommand = (group: string, title: string) => {
+    delete this.commands[group][title];
     return this.save();
   };
 

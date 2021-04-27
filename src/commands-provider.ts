@@ -4,25 +4,23 @@ import {
 } from 'vscode';
 
 import CommandItem from './command';
+import ICommand from './icommand';
 import LocalStorage from './storage';
 
 export default class CommandsProvider implements TreeDataProvider<CommandItem> {
-  group: string;
-
-  constructor(private storage: LocalStorage) {
-    [this.group] = Object.keys(this.storage.commands);
-    this.setHasGroupsContext();
-  }
+  private commands: ICommand[] = [];
+  private group: string = '';
 
   getTreeItem(element: CommandItem): TreeItem {
     return element;
   }
 
   getChildren(element?: CommandItem) {
-    if (element || !this.group) {
-      return Promise.resolve([]);
-    }
-    return Promise.resolve(this.getCommands());
+    const commands = element?
+      this.commands.map(
+        (command) => new CommandItem(command.title, command.command, this.group)
+      ) : [];
+    return Promise.resolve(commands);
   }
 
   // eslint-disable-next-line max-len
@@ -31,24 +29,9 @@ export default class CommandsProvider implements TreeDataProvider<CommandItem> {
   // eslint-disable-next-line max-len
   onDidChangeTreeData: Event<CommandItem | undefined | null | void> = this.pOnDidChangeTreeData.event;
 
-  refresh(): void {
+  setGroup(group: string, commands: ICommand[]) {
+    this.group = group;
+    this.commands = commands;
     this.pOnDidChangeTreeData.fire();
-    this.setHasGroupsContext();
   }
-
-  reset(): void {
-    [this.group] = Object.keys(this.storage.commands);
-    this.setHasGroupsContext();
-  }
-
-  private getCommands = () => {
-    const group = this.storage.commands[this.group];
-    return Object.keys(group).map((key) => new CommandItem(key, group[key], this.group));
-  };
-
-  private setHasGroupsContext = () => {
-    // Has one or more groups saved
-    const hasGroups = Object.keys(this.storage.commands).length > 0;
-    commands.executeCommand('setContext', 'hasGroups', hasGroups);
-  };
 }
