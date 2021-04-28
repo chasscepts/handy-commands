@@ -66,7 +66,7 @@ export default class NpmScripts {
   private initialize() {
     vscode.workspace.onDidChangeWorkspaceFolders(() => this.initialize());
 
-    const uri = vscode.window.activeTextEditor!.document.uri;
+    const uri = vscode.window.activeTextEditor?.document.uri;
     if (uri) {
       this.setupWatcher(uri);
       return;
@@ -92,26 +92,29 @@ export default class NpmScripts {
 
   private setupWatcher(uri: vscode.Uri) {
     const pattern = new vscode.RelativePattern (
-      vscode.workspace.getWorkspaceFolder(uri)!, 'packages.json'
+      vscode.workspace.getWorkspaceFolder(uri)!, 'package.json'
     );
 
     if (pattern.pattern === this.currentPattern) {
       return;
     }
+
     this.currentPattern = pattern.pattern;
 
     if (this.watcher) {
       this.watcher.dispose();
     }
 
+    const jsonFile = vscode.Uri.joinPath(vscode.Uri.parse(pattern.base), 'package.json');
     this.watcher = vscode.workspace.createFileSystemWatcher(pattern, true, false, false);
+
     this.watcher.onDidDelete(() => {
       this.onScriptsChangeListener([]);
     });
     this.watcher.onDidChange((uri) => {
-      this.loadScripts(vscode.Uri.joinPath(uri, 'package.json'));
+      this.loadScripts(jsonFile);
     });
 
-    this.loadScripts(vscode.Uri.joinPath(uri, 'package.json'));
+    this.loadScripts(jsonFile);
   }
 }

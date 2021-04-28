@@ -11,33 +11,18 @@ interface GroupChangeEventListener {
 
 export default class CommandsBank {
   private store: LocalStorage;
-  private npmScripts: NpmScripts;
+  private storeKeys: string[] = [];
+  //private npmScripts: NpmScripts;
   private group: string | null = null;
   private activeCommands: ICommand[] = [];
   private npmScriptsTag = 'Npm Scripts';
   private npmScriptsCommands: ICommand[] = [];
-
-  public onGroupChange: GroupChangeEventListener = defaultChangeHandler;
+  private onGroupChange: GroupChangeEventListener = defaultChangeHandler;
 
   constructor(memento: Memento) {
     this.store = new LocalStorage(memento);
     this.resetGroup(false);
-    this.npmScripts = new NpmScripts();
-    this.npmScripts.setOnScriptsChangeListener((scripts) => {
-      this.npmScriptsCommands = scripts;
-      if (this.group === this.npmScriptsTag) {
-        if(scripts.length === 0 && this.activeCommands.length === 0){
-          return;
-        }
-        this.selectGroup(this.npmScriptsTag);
-        this.raiseGroupChangedEvent();
-        return;
-      }
-      if (!this.group && scripts.length > 0) {
-        this.selectGroup(this.npmScriptsTag);
-        this.raiseGroupChangedEvent();
-      }
-    });
+    this.setupNpmScripts();
   }
 
   setOnChangeListener(listener: GroupChangeEventListener | null) {
@@ -55,22 +40,17 @@ export default class CommandsBank {
   }
 
   selectGroup(group: string): void {
-    if (group === this.group) {
-      return;
-    }
     this.group = group;
     if (group === this.npmScriptsTag) {
-      this.activeCommands = this.npmScriptsCommands.map(
-        (icommand) => ({ title: icommand.title, command: icommand.command })
-      );
-    }
-    else {
+      this.activeCommands = this.npmScriptsCommands.map((icommand) => icommand);
+    } else if (group === this.group) {
+      return;
+    } else {
       const groups = this.store.commands[group];
       this.activeCommands = Object.keys(groups).map(
         (key) => ({ title: key, command: groups[key] })
       );
     }
-
     this.raiseGroupChangedEvent();
   }
 
@@ -130,7 +110,7 @@ export default class CommandsBank {
   }
 
   getGroups() {
-    const groups = Object.keys(this.store.commands);
+    const groups = [...this.storeKeys];
     if (this.npmScriptsCommands.length > 0) {
       groups.push(this.npmScriptsTag);
     }
@@ -141,12 +121,13 @@ export default class CommandsBank {
     if (this.npmScriptsCommands.length > 0) {
       return false;
     }
-    return Object.keys(this.store.commands).length > 0;
+    return this.storeKeys.length <= 0;
   }
 
   private resetGroup(includeNpm = true) {
     this.group = null;
     const groups = Object.keys(this.store.commands);
+    this.storeKeys = groups;
     if (groups.length > 0) {
       this.group = groups[0];
       const selectedGroup = this.store.commands[this.group];
@@ -179,5 +160,22 @@ export default class CommandsBank {
 
   private isValidGroupName(group: string) {
     return group !== this.npmScriptsTag;
+  }
+
+  private setupNpmScripts() {
+    const npmScripts = new NpmScripts();
+    npmScripts.setOnScriptsChangeListener((scripts) => {
+      this.npmScriptsCommands = scripts;
+      if (this.group === this.npmScriptsTag) {
+        if(scripts.length === 0 && this.activeCommands.length === 0){
+          return;
+        }
+        this.selectGroup(this.npmScriptsTag);
+        return;
+      }
+      if (!this.group && scripts.length > 0) {
+        this.selectGroup(this.npmScriptsTag);
+      }
+    });
   }
 }

@@ -6,23 +6,23 @@ import CommandsProvider from './commands-provider';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-  const bank = new CommandsBank(context.globalState);
+
   const provider = new CommandsProvider();
+   // eslint-disable-next-line max-len
+   const tree = vscode.window.createTreeView('handy-commands.commandTree', { treeDataProvider: provider });
 
-  // eslint-disable-next-line max-len
-  const tree = vscode.window.createTreeView('handy-commands.commandTree', { treeDataProvider: provider });
+  const bank = new CommandsBank(context.globalState);
 
-
-  bank.onGroupChange = (group, commands) => {
+  bank.setOnChangeListener((group, commands) => {
     if (group !== null) {
-      vscode.commands.executeCommand('setContext', 'hasGroup', true);
+      vscode.commands.executeCommand('setContext', 'hasGroups', true);
       provider.setGroup(group, commands);
       tree.title = `HC - ${group}`;
     } else {
-      vscode.commands.executeCommand('setContext', 'hasGroup', false);
+      vscode.commands.executeCommand('setContext', 'hasGroups', false);
       tree.title = 'Handy Commands';
     }
-  };
+  });
 
   const groupEmptyMessage = 'Groups Empty! Please add groups before running this command';
 
@@ -43,7 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      vscode.window.showQuickPick(Object.keys(bank.getGroups())).then((group) => {
+      vscode.window.showQuickPick(bank.getGroups()).then((group) => {
         if (!group || group === bank.getSelectedGroup()) {
           return;
         }

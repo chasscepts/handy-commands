@@ -5,7 +5,6 @@ import {
 
 import CommandItem from './command';
 import ICommand from './icommand';
-import LocalStorage from './storage';
 
 export default class CommandsProvider implements TreeDataProvider<CommandItem> {
   private commands: ICommand[] = [];
@@ -16,7 +15,7 @@ export default class CommandsProvider implements TreeDataProvider<CommandItem> {
   }
 
   getChildren(element?: CommandItem) {
-    const commands = element?
+    const commands = !element?
       this.commands.map(
         (command) => new CommandItem(command.title, command.command, this.group)
       ) : [];
