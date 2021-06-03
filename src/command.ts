@@ -2,16 +2,16 @@ import * as vscode from 'vscode';
 
 export default class CommandItem extends vscode.TreeItem {
   commandText: string;
-
   name: string;
-
   group: string;
+  type: string;
 
-  constructor(label: string, commandText: string, group: string) {
+  constructor(label: string, commandText: string, group: string, type: string) {
     super(label, vscode.TreeItemCollapsibleState.None);
     this.commandText = commandText;
     this.group = group;
     this.name = label;
+    this.type = type;
     this.command = {
       title: label,
       command: 'handy-commands.execute-command',

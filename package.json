@@ -2,8 +2,7 @@
   "name": "handy-commands",
   "displayName": "Handy Commands",
   "description": "Organise frequently used commands on the sidebar for easy access.",
-  "version": "0.0.2",
-  "icon": "assets/icon.png",
+  "version": "0.0.3",  "icon": "assets/icon.png",
   "publisher": "chasscepts",
   "author": {
     "name": "Obetta Francis",
@@ -34,27 +33,43 @@
         "title": "Execute"
       },
       {
-        "command": "handy-commands.change-group",
-        "title": "Change Group"
+        "command": "handy-commands.select-group",
+        "title": "Groups",
+        "icon": {
+          "light": "assets/light/backburger.png",
+          "dark": "assets/dark/backburger.png"
+        }
       },
       {
         "command": "handy-commands.add-new-group",
-        "title": "New Group"
+        "title": "New Group",
+        "icon": {
+          "light": "assets/light/add.png",
+          "dark": "assets/dark/add.png"
+        }
       },
       {
         "command": "handy-commands.add-new-command",
-        "title": "New Command"
+        "title": "New Command",
+        "icon": {
+          "light": "assets/light/add.png",
+          "dark": "assets/dark/add.png"
+        }
       },
       {
         "command": "handy-commands.delete-group",
-        "title": "Delete Group"
+        "title": "Delete Group",
+        "icon": {
+          "light": "assets/light/delete.png",
+          "dark": "assets/dark/delete.png"
+        }
       },
       {
         "command": "handy-commands.delete-command",
         "title": "Delete",
         "icon": {
-          "light": "assets/light/delete.svg",
-          "dark": "assets/dark/delete.svg"
+          "light": "assets/light/delete.png",
+          "dark": "assets/dark/delete.png"
         }
       },
       {
@@ -70,12 +85,12 @@
       {
         "view": "handy-commands.commandTree",
         "contents": "[Add A Group To Start](Command:handy-commands.add-new-group)",
-        "when": "!hasGroups"
+        "when": "isEmpty && isRoot"
       },
       {
         "view": "handy-commands.commandTree",
         "contents": "[Add A Command To This Group](Command:handy-commands.add-new-command)",
-        "when": "hasGroups"
+        "when": "isEmpty && !isRoot && !isNpmScript"
       }
     ],
     "views": {
@@ -89,35 +104,35 @@
     "menus": {
       "view/title": [
         {
-          "command": "handy-commands.change-group",
-          "when": "view == handy-commands.commandTree && hasGroups",
-          "group": "@0"
+          "command": "handy-commands.select-group",
+          "when": "view == handy-commands.commandTree && !isRoot",
+          "group": "navigation@3"
         },
         {
           "command": "handy-commands.add-new-group",
-          "when": "view == handy-commands.commandTree",
-          "group": "@1"
+          "when": "view == handy-commands.commandTree && isRoot",
+          "group": "navigation@0"
         },
         {
           "command": "handy-commands.add-new-command",
-          "when": "view == handy-commands.commandTree && hasGroups",
-          "group": "@2"
+          "when": "view == handy-commands.commandTree && !isRoot && !isNpmScript",
+          "group": "navigation@1"
         },
         {
           "command": "handy-commands.delete-group",
-          "when": "view == handy-commands.commandTree && hasGroups",
-          "group": "@3"
+          "when": "view == handy-commands.commandTree && !isRoot && !isNpmScript",
+          "group": "navigation@2"
         }
       ],
       "view/item/context": [
         {
           "command": "handy-commands.delete-command",
-          "when": "view == handy-commands.commandTree",
+          "when": "view == handy-commands.commandTree && !isRoot && !isNpmScript",
           "group": "inline@1"
         },
         {
           "command": "handy-commands.paste-to-terminal",
-          "when": "view == handy-commands.commandTree",
+          "when": "view == handy-commands.commandTree && !isRoot && !isNpmScript",
           "group": "inline@0"
         }
       ]
@@ -129,7 +144,9 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package",
+    "publish": "vsce publish"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
