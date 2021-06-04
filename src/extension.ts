@@ -92,12 +92,12 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      vscode.window.showInputBox({ prompt: 'Please Enter Command' }).then((command) => {
-        if (!command) {
+      vscode.window.showInputBox({ prompt: 'Please Enter Command Label' }).then((label) => {
+        if (!label) {
           return;
         }
-        vscode.window.showInputBox({ prompt: 'Please Enter Command Label' }).then((label) => {
-          if (!label) {
+        vscode.window.showInputBox({ prompt: 'Please Enter Command' }).then((command) => {
+          if (!command) {
             return;
           }
           if (!bank.createCommand(label, command)) {
