@@ -20,8 +20,8 @@ export default class CommandsBank {
 
   constructor(memento: Memento) {
     this.store = new LocalStorage(memento);
-    this.setupNpmScripts();
     this.reset();
+    this.setupNpmScripts();
   }
 
   setOnChangeListener(listener: GroupChangeEventListener | null) {
@@ -51,6 +51,7 @@ export default class CommandsBank {
       this.activeCommands = Object.keys(groups).map(
         (key) => ({ title: key, command: groups[key], type: 'command' })
       );
+      this.store.setlastOpennedGroup(this.group);
     }
     this.raiseGroupChangedEvent();
   }
@@ -128,6 +129,19 @@ export default class CommandsBank {
   private reset() {
     if (this.group === CommandsBank.npmScriptsTag) {
       return;
+    }
+    const group = this.store.lastOpennedGroup;
+    console.log('group', group);
+    if (group) {
+      const groups = this.store.commands[group];
+      console.log(groups);
+      if (groups) {
+        this.activeCommands = Object.keys(groups).map(
+          (key) => ({ title: key, command: groups[key], type: 'command' })
+        );
+        this.group = group;
+        return;
+      }
     }
     this.group = 'root';
     this.activeCommands = this.getGroups().map((key) => ({ title: key, command: 'select-group', type: 'group' }));
