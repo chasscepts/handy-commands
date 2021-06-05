@@ -2,8 +2,11 @@ import { Memento } from "vscode";
 
 const STORAGE_KEY = 'handy-commands.storage.STORAGE_KEY';
 
+const LAST_OPENNED_GROUP_KEY = 'handy-commands.storage.GROUP_KEY';
+
 export default class LocalStorage {
   commands: { [group: string]: { [command: string]: string} };
+  lastOpennedGroup: string | undefined;
 
   constructor(private storage: Memento) {
     let text = this.storage.get<string>(STORAGE_KEY);
@@ -17,6 +20,7 @@ export default class LocalStorage {
         this.commands = {};
       }
     }
+    this.lastOpennedGroup = this.storage.get<string>(LAST_OPENNED_GROUP_KEY);
   }
 
   /**
@@ -61,6 +65,16 @@ export default class LocalStorage {
   };
 
   isEmpty = () => Object.keys(this.commands).length <= 0;
+
+  setlastOpennedGroup = (group: string) => {
+    try {
+      this.storage.update(LAST_OPENNED_GROUP_KEY, group);
+      this.lastOpennedGroup = group;
+    } catch (e) {
+      return false;
+    }
+    return true;
+  };
 
   private save = ()=> {
     try {

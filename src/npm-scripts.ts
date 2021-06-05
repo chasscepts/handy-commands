@@ -56,7 +56,7 @@ export default class NpmScripts {
         this.setScripts([]);
         return;
       }
-      const cmds = Object.keys(scripts).map(key => ({ title: key, command: scripts[key]}));
+      const cmds = Object.keys(scripts).map(key => ({ title: key, command: scripts[key], type: 'command'}));
       this.setScripts(cmds);
     }catch(e) {
       this.setScripts([]);

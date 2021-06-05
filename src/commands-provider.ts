@@ -17,7 +17,7 @@ export default class CommandsProvider implements TreeDataProvider<CommandItem> {
   getChildren(element?: CommandItem) {
     const commands = !element?
       this.commands.map(
-        (command) => new CommandItem(command.title, command.command, this.group)
+        (command) => new CommandItem(command.title, command.command, this.group, command.type)
       ) : [];
     return Promise.resolve(commands);
   }

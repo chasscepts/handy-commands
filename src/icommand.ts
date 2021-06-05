@@ -1,4 +1,5 @@
 export default interface ICommand {
   title: string,
-  command: string
+  command: string,
+  type: string
 }

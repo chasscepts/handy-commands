@@ -5,7 +5,7 @@ import CommandItem from '../../command';
 
 describe ('CommandItem', () => {
   describe ('Initialization', () => {
-    const commandItem = new CommandItem('test', 'label', 'parent');
+    const commandItem = new CommandItem('test', 'label', 'parent', 'command');
     it ('Correctly sets collapsible state to none', () => {
       assert(commandItem.collapsibleState === TreeItemCollapsibleState.None);
     });

@@ -11,17 +11,16 @@ interface GroupChangeEventListener {
 
 export default class CommandsBank {
   private store: LocalStorage;
-  private storeKeys: string[] = [];
-  //private npmScripts: NpmScripts;
-  private group: string | null = null;
+  private group = 'root';
   private activeCommands: ICommand[] = [];
-  private npmScriptsTag = 'Npm Scripts';
   private npmScriptsCommands: ICommand[] = [];
   private onGroupChange: GroupChangeEventListener = defaultChangeHandler;
 
+  static npmScriptsTag = 'Npm Scripts';
+
   constructor(memento: Memento) {
     this.store = new LocalStorage(memento);
-    this.resetGroup(false);
+    this.reset();
     this.setupNpmScripts();
   }
 
@@ -41,15 +40,18 @@ export default class CommandsBank {
 
   selectGroup(group: string): void {
     this.group = group;
-    if (group === this.npmScriptsTag) {
+    if (group === CommandsBank.npmScriptsTag) {
       this.activeCommands = this.npmScriptsCommands.map((icommand) => icommand);
-    } else if (group === this.group) {
-      return;
+    } else if(group === 'root') {
+      this.activeCommands = this.getGroups().map(
+        (key) => ({ title: key, command: 'select-group', type: 'group' })
+      );
     } else {
       const groups = this.store.commands[group];
       this.activeCommands = Object.keys(groups).map(
-        (key) => ({ title: key, command: groups[key] })
+        (key) => ({ title: key, command: groups[key], type: 'command' })
       );
+      this.store.setlastOpennedGroup(this.group);
     }
     this.raiseGroupChangedEvent();
   }
@@ -68,22 +70,11 @@ export default class CommandsBank {
   }
 
   createCommand(title: string, commandText: string) {
-    if (this.group && this.group !== this.npmScriptsTag) {
+    if (this.group && this.group !== CommandsBank.npmScriptsTag) {
       const result = this.store.createCommand(this.group, title, commandText);
       if (result) {
-        this.activeCommands.push({ title: title, command: commandText });
+        this.activeCommands.push({ title: title, command: commandText, type: 'command' });
         this.raiseGroupChangedEvent();
-      }
-      return result;
-    }
-    return false;
-  }
-
-  deleteGroup() {
-    if (this.group && this.canDeleteGroup()) {
-      const result = this.store.deleteGroup(this.group);
-      if (result) {
-        this.resetGroup(true);
       }
       return result;
     }
@@ -96,9 +87,20 @@ export default class CommandsBank {
       if (result) {
         const group = this.store.commands[this.group];
         this.activeCommands = Object.keys(group).map(
-          (key) => ({ title: key, command: group[key] })
+          (key) => ({ title: key, command: group[key], type: 'command' })
         );
         this.raiseGroupChangedEvent();
+      }
+      return result;
+    }
+    return false;
+  }
+
+  deleteGroup() {
+    if (this.group && this.canDeleteGroup()) {
+      const result = this.store.deleteGroup(this.group);
+      if (result) {
+        this.reset();
       }
       return result;
     }
@@ -110,9 +112,9 @@ export default class CommandsBank {
   }
 
   getGroups() {
-    const groups = [...this.storeKeys];
+    const groups = Object.keys(this.store.commands);
     if (this.npmScriptsCommands.length > 0) {
-      groups.push(this.npmScriptsTag);
+      groups.push(CommandsBank.npmScriptsTag);
     }
     return groups;
   }
@@ -121,61 +123,66 @@ export default class CommandsBank {
     if (this.npmScriptsCommands.length > 0) {
       return false;
     }
-    return this.storeKeys.length <= 0;
+    return Object.keys(this.store.commands).length <= 0;
   }
 
-  private resetGroup(includeNpm = true) {
-    this.group = null;
-    const groups = Object.keys(this.store.commands);
-    this.storeKeys = groups;
-    if (groups.length > 0) {
-      this.group = groups[0];
-      const selectedGroup = this.store.commands[this.group];
-      this.activeCommands = Object.keys(selectedGroup).map(
-        key => ({title: key, command: selectedGroup[key]})
-      );
+  private reset() {
+    if (this.group === CommandsBank.npmScriptsTag) {
+      return;
     }
-    else if (NpmScripts.length > 0) {
-      this.group = this.npmScriptsTag;
-      this.activeCommands = this.npmScriptsCommands;
+    const group = this.store.lastOpennedGroup;
+    console.log('group', group);
+    if (group) {
+      const groups = this.store.commands[group];
+      console.log(groups);
+      if (groups) {
+        this.activeCommands = Object.keys(groups).map(
+          (key) => ({ title: key, command: groups[key], type: 'command' })
+        );
+        this.group = group;
+        return;
+      }
     }
-    else {
-      this.activeCommands = [];
-    }
+    this.group = 'root';
+    this.activeCommands = this.getGroups().map((key) => ({ title: key, command: 'select-group', type: 'group' }));
     this.raiseGroupChangedEvent();
-  }
-
-  private raiseGroupChangedEvent() {
-    const commands = this.group === null? [] : this.activeCommands;
-    this.onGroupChange(this.group, this.activeCommands);
-  }
-
-  private canDeleteGroup() {
-    return this.group !== this.npmScriptsTag;
-  }
-
-  private canDeleteCommand() {
-    return this.group !== this.npmScriptsTag;
-  }
-
-  private isValidGroupName(group: string) {
-    return group !== this.npmScriptsTag;
   }
 
   private setupNpmScripts() {
     const npmScripts = new NpmScripts();
     npmScripts.setOnScriptsChangeListener((scripts) => {
       this.npmScriptsCommands = scripts;
-      if (this.group === this.npmScriptsTag) {
+      if (this.group === CommandsBank.npmScriptsTag) {
         if(scripts.length === 0 && this.activeCommands.length === 0){
           return;
         }
-        this.selectGroup(this.npmScriptsTag);
+        this.selectGroup(CommandsBank.npmScriptsTag);
         return;
       }
-      if (!this.group && scripts.length > 0) {
-        this.selectGroup(this.npmScriptsTag);
+      if (this.isRoot() && scripts.length > 0) {
+        this.selectGroup(CommandsBank.npmScriptsTag);
       }
     });
+  }
+
+  private isRoot() {
+    return this.group === 'root';
+  }
+
+  private raiseGroupChangedEvent() {
+    const commands = this.group === null? [] : this.activeCommands;
+    this.onGroupChange(this.group, commands);
+  }
+
+  private canDeleteGroup() {
+    return this.group !== CommandsBank.npmScriptsTag;
+  }
+
+  private canDeleteCommand() {
+    return this.group !== CommandsBank.npmScriptsTag;
+  }
+
+  private isValidGroupName(group: string) {
+    return group !== CommandsBank.npmScriptsTag;
   }
 }
