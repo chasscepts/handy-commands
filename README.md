@@ -1,9 +1,10 @@
 # Handy Commands
 
-A VSCode extension for organizing frequently run commands.
-Sometimes we forget that command we want to run and we will leave our development environment to search for it. That is not productive. With Handy Commands, you organize them in groups of related commands and run them with a click of the mouse. If some part of the command changes from run to run, paste and edit it in the terminal. If you no longer frequestly use a command, delete it. And by organizing them into groups, they will not clutter your workspace.
+A Visual Studio Code extension for organizing frequently run commands.
+Sometimes we forget that command we want to run, and we will leave our development environment to search for it.
+That is not productive. With Handy Commands, you organize them into groups of related commands and run them with the click of the mouse. If some part of the command changes from run to run, you can paste and edit it in the terminal. If you no longer frequently use a command, you can delete it. And by organizing them into groups, they will not clutter your workspace.
 
-As a bonus in v0.0.2, it automatically imports all the scripts from your package.json and puts them in their own group (Npm Scripts). It watches changes to package.json and updates this group as the scripts changes.
+From v0.0.2, Handy Commands automatically imports the scripts defined in package.json and puts them in their own group (Npm Scripts). It watches changes to package.json and updates this group as the script changes.
 
 
 ![screenshot](./assets/screenshot.gif)
@@ -33,7 +34,7 @@ As a bonus in v0.0.2, it automatically imports all the scripts from your package
 
 ## Release Notes
 
-### Version 0.0.2
+### Version 0.0.3 - 05/06/2021
 
 ## Change Logs
 
