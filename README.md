@@ -39,6 +39,8 @@ As a bonus in v0.0.2, it automatically imports all the scripts from your package
 
 - v0.0.2 Added importing npm scripts from package.json. Npm Scripts is now reserved as the name of this group and cannot be used when creating a new group. Also you can neither delete the group nor commands from it.
 
+- v0.0.3 Groups are moved to the Treeview. On clicking the group node, the Treeview is refreshed with populated with the commands in the group. A back button is provided to go back to the group view.
+
 ## Author Details
 
 👤 **Obetta Francis**
