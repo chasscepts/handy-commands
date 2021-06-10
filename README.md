@@ -42,6 +42,8 @@ From v0.0.2, Handy Commands automatically imports the scripts defined in package
 
 - v0.0.3 Groups are moved to the Treeview. On clicking the group node, the Treeview is refreshed with populated with the commands in the group. A back button is provided to go back to the group view.
 
+- v0.0.4 Fixed bug of NPM Scripts not running correctly.
+
 ## Author Details
 
 👤 **Obetta Francis**
