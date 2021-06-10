@@ -2,7 +2,7 @@
   "name": "handy-commands",
   "displayName": "Handy Commands",
   "description": "Organise frequently used commands on the sidebar for easy access.",
-  "version": "0.0.3",  "icon": "assets/icon.png",
+  "version": "0.0.4",  "icon": "assets/icon.png",
   "publisher": "chasscepts",
   "author": {
     "name": "Obetta Francis",
