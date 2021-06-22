@@ -1,21 +1,18 @@
 # Handy Commands
 
-A Visual Studio Code extension for organizing frequently run commands.
-Sometimes we forget that command we want to run, and we will leave our development environment to search for it.
-That is not productive. With Handy Commands, you organize them into groups of related commands and run them with the click of the mouse. If some part of the command changes from run to run, you can paste and edit it in the terminal. If you no longer frequently use a command, you can delete it. And by organizing them into groups, they will not clutter your workspace.
-
-From v0.0.2, Handy Commands automatically imports the scripts defined in package.json and puts them in their own group (Npm Scripts). It watches changes to package.json and updates this group as the script changes.
+Handy Commands is a Visual Studio Code extension for organizing commands that we frequently run on the command line. Sometimes we forget that command we want to run, and we will leave our development environment to search for it. That is not productive. With Handy Commands, you organize them into groups of related commands and run them with the click of the mouse. If some part of the command changes from run to run, you can paste and edit it in the terminal. If you no longer frequently use a command, you can delete it. And by organizing them into groups, they will not clutter your workspace.
+From v0.0.2, Handy Commands automatically imports the scripts defined in package.json and puts them in their group (Npm Scripts). It watches changes to package.json and updates this group as the script changes.
 
 
 ![screenshot](./assets/screenshot.gif)
 
 ## Features
 
-- Add a group to your collection. (Extension is prepopulated with scripts from package.json)
-- Add command items to the group. A command item consists of a command and the label.
+- Add a group to your collection. (Extension is pre-populated with scripts from package.json)
+- Add command items to the group. A command item consists of a command and a label.
 - Add more groups and commands.
 - Select a group to load its commands in the view.
-- Run a command by clicking it's node.
+- Run the command by clicking its node.
 - Paste a command by clicking the paste icon.
 - Delete commands and groups as needed.
 - Be more productive.
